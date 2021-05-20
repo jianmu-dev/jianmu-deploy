@@ -1,5 +1,5 @@
 server {
-  server_name ci.ethan-liu.cn;
+  server_name ci.xxxxxx.cn;
   listen 443 ssl;
   underscores_in_headers on;
   ssl_certificate /etc/nginx/ssl/fullchain.cer;
@@ -117,6 +117,6 @@ server {
 
 server {
   listen 80;
-  server_name ci.ethan-liu.cn;
-  rewrite ^(.*)$ https://ci.ethan-liu.cn$1 permanent;
+  server_name ci.xxxxxx.cn;
+  rewrite ^(.*)$ https://ci.xxxxxx.cn$1 permanent;
 }
