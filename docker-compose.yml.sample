@@ -15,7 +15,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://jianmu-mysql:3306/jianmu?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWROD: xxxxxx
+      SPRING_DATASOURCE_PASSWORD: xxxxxx
       EMBEDDED_DOCKER-WORKER_DOCKER-HOST: unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
