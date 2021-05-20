@@ -1,0 +1,38 @@
+version: '3'
+services:
+  jianmu-mysql:
+    image: percona:8
+    command: --init-connect='SET NAMES utf8' --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=1200 --max-user-connections=1000
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "xxxxxx"
+      MYSQL_DATABASE: "jianmu"
+      TZ: "Asia/Shanghai"
+  ci-server:
+    image: swr.cn-east-2.myhuaweicloud.com/jianmu/ci-server:1.0
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://jianmu-mysql:3306/jianmu?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWROD: xxxxxx
+      EMBEDDED_DOCKER-WORKER_DOCKER-HOST: unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/xxxxx/ci/log:/task_log
+      - /home/xxxxx/ci/task_def:/task_def
+    depends_on:
+      - jianmu-mysql
+  web:
+    image: 'nginx:latest'
+    restart: always
+    volumes:
+      - /home/xxxxxx/nginx.conf:/etc/nginx/conf.d/defalt.conf
+      - /home/xxxxxx/cert:/etc/nginx/ssl
+      - /home/xxxxxx/front/dist:/home/dist
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - jianmu-mysql
+      - ci-server
