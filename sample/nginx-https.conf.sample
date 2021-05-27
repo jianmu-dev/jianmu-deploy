@@ -1,8 +1,11 @@
 server {
-  listen 80;
-  server_name xxx.xxx.xxx.xxx;
+  server_name ${nginx_server_name};
+  listen 443 ssl;
+  underscores_in_headers on;
+  ssl_certificate /etc/nginx/ssl/fullchain.cer;
+  ssl_certificate_key /etc/nginx/ssl/private.key;
 
-    location / {
+  location / {
     root /home/dist;
     index index.html;
     try_files $uri $uri/ /index.html;
@@ -110,4 +113,10 @@ server {
     proxy_pass http://ci-server:8081;
     proxy_redirect off;
   }
+}
+
+server {
+  listen 80;
+  server_name ${nginx_server_name};
+  rewrite ^(.*)$ ${nginx_server_name}$1 permanent;
 }

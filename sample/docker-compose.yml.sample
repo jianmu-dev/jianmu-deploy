@@ -6,30 +6,30 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "xxxxxx"
+      MYSQL_ROOT_PASSWORD: "${mysql_root_password}"
       MYSQL_DATABASE: "jianmu"
       TZ: "Asia/Shanghai"
   ci-server:
-    image: swr.cn-east-2.myhuaweicloud.com/jianmu/ci-server:1.0
+    image: jianmudev/jianmu-main:${server_tag}
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://jianmu-mysql:3306/jianmu?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: xxxxxx
+      SPRING_DATASOURCE_PASSWORD: "${mysql_root_password}"
       EMBEDDED_DOCKER-WORKER_DOCKER-HOST: unix:///var/run/docker.sock
+      JIANMU_API_ADMINPASSWD: ${jianmu_password}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/xxxxx/ci/log:/task_log
-      - /home/xxxxx/ci/task_def:/task_def
+      - ${task_log_file_path}:/task_log
+      - ${task_def_file_path}:/task_def
     depends_on:
       - jianmu-mysql
   web:
-    image: 'nginx:latest'
+    image: jianmudev/jianmu-web:${web_tag}
     restart: always
     volumes:
-      - /home/xxxxxx/nginx.conf:/etc/nginx/conf.d/defalt.conf
-      - /home/xxxxxx/cert:/etc/nginx/ssl
-      - /home/xxxxxx/front/dist:/home/dist
+      - ${nginx_conf_file_path}:/etc/nginx/conf.d/defalt.conf
+      - ${nginx_ssl_cert_dir}:/etc/nginx/ssl                
     ports:
       - "80:80"
       - "443:443"
