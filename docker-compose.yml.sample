@@ -6,18 +6,18 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "${mysql_root_password}"
+      MYSQL_ROOT_PASSWORD: "${jianmu_mysql_root_password}"
       MYSQL_DATABASE: "jianmu"
       TZ: "Asia/Shanghai"
   ci-server:
-    image: jianmudev/jianmu-main:${server_tag}
+    image: jianmudev/jianmu-main:latest
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://jianmu-mysql:3306/jianmu?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "${mysql_root_password}"
+      SPRING_DATASOURCE_PASSWORD: "${jianmu_mysql_root_password}"
       EMBEDDED_DOCKER-WORKER_DOCKER-HOST: unix:///var/run/docker.sock
-      JIANMU_API_ADMINPASSWD: ${jianmu_password}
+      JIANMU_API_ADMINPASSWD: "${jianmuadmin_password}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${task_log_file_path}:/task_log
@@ -25,7 +25,7 @@ services:
     depends_on:
       - jianmu-mysql
   web:
-    image: jianmudev/jianmu-web:${web_tag}
+    image: jianmudev/jianmu-web:latest
     ports:
       - "80:80"
       - "443:443"
