@@ -1,8 +1,14 @@
 # jianmu-deploy
 
+#### 系统需求
+
+1. Docker 19.30以上
+2. Docker-compose 1.29.2以上
+
 #### 介绍
-jianmu服务部署示例
+jianmu服务部署
 
 #### 使用说明
 
-1.  docker-compose up -d启动
+1.  wget https://gitee.com/jianmu_dev/jianmu-deploy/raw/master/docker-compose.yml
+2.  docker-compose up -d启动
