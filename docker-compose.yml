@@ -22,7 +22,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/jianmu/ci/task_log:/task_log
-      - /mnt/jianmu/ci/task_def:/task_def
     depends_on:
       - jianmu-mysql
   web:
