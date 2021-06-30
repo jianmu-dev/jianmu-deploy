@@ -18,9 +18,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: 123456
       EMBEDDED_DOCKER-WORKER_DOCKER-HOST: tcp://xx.xx.xx.xx:2375
       JIANMU_API_ADMINPASSWD: 123456
+      REGISTRY_URL: https://hub.jianmu.dev
     volumes:
       - /mnt/jianmu/ci/task_log:/task_log
-      - /mnt/jianmu/ci/task_def:/task_def
     depends_on:
       - jianmu-mysql
   web:
