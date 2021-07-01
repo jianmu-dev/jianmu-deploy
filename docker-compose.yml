@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: "jianmu"
       TZ: "Asia/Shanghai"
   ci-server:
-    image: jianmudev/jianmu-main:latest
+    image: jianmudev/jianmu-ci-server:latest
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://jianmu-mysql:3306/jianmu?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
@@ -25,7 +25,7 @@ services:
     depends_on:
       - jianmu-mysql
   web:
-    image: jianmudev/jianmu-web:latest
+    image: jianmudev/jianmu-ci-ui:latest
     ports:
       - "80:80"
       - "443:443"
