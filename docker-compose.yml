@@ -32,3 +32,20 @@ services:
     depends_on:
       - jianmu-mysql
       - ci-server
+  jianmu-hub-server:
+    image: huangxi1020/jianmu-hub-server:latest
+    container_name: jianmu-hub-server
+    ports:
+      - "8000:8000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/jianmu_hub_server?useunicode=true&characterencoding=utf8&usessl=false&allowpublickeyretrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      JIANMU_OSS_ACCESS_KEY: di0QoZTUFcBPUenjPF2jco9ewZR6nEHkR8kom_xv
+      JIANMU_OSS_SECRET_KEY: kF8kA-sK8I0aj4qI01x4mCY7bD1qNvG20ATLxrqI
+      JIANMU_OSS_BUCKET: test-jianmu
+      JIANMU_OSS_TOKEN_EXPIRE_SECONDS: 60000
+      API_GATEWAY_HOST: https://api.test.jianmu.dev
+    depends_on:
+      - jianmu-mysql
+    command: [ "./wait-for-it.sh", "db:3306" ]
