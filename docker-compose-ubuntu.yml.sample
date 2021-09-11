@@ -23,6 +23,7 @@ services:
       - /mnt/jianmu/ci/task_log:/task_log
     depends_on:
       - jianmu-mysql
+    entrypoint: ["/wait-for-it.sh", "jianmu-mysql:3306", "--", "java", "-Duser.timezone=Asia/Shanghai", "-cp", "/app/resources:/app/classes:/app/libs/*", "dev.jianmu.api.SpringbootApp"]
   web:
     image: jianmudev/jianmu-ci-ui:latest
     ports:
