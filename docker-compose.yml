@@ -17,6 +17,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 123456
       EMBEDDED_DOCKER-WORKER_DOCKER-HOST: unix:///var/run/docker.sock
+      EMBEDDED_DOCKER-WORKER_SOCK-FILE: /var/run/docker.sock
       JIANMU_API_ADMINPASSWD: 123456
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
