@@ -19,6 +19,8 @@ services:
       EMBEDDED_DOCKER-WORKER_DOCKER-HOST: unix:///var/run/docker.sock
       EMBEDDED_DOCKER-WORKER_SOCK-FILE: /var/run/docker.sock
       JIANMU_API_ADMINPASSWD: 123456
+#      REGISTRY_AK:
+#      REGISTRY_SK:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/jianmu/ci/task_log:/task_log
