@@ -1,0 +1,303 @@
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ci-server
+  namespace: default
+  labels:
+    io.kompose.service: ci-server
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.7.0 (HEAD)
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: ci-server
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: ci-server
+    spec:
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: ''
+        - name: ci-server-claim1
+          persistentVolumeClaim:
+            claimName: ci-server-claim1
+      containers:
+        - name: ci-server
+          image: 'jianmudev/jianmu-ci-server:v1.0.0'
+          command:
+            - /wait-for-it.sh
+            - 'jianmu-mysql:3306'
+            - '--'
+            - java
+            - '-Duser.timezone=Asia/Shanghai'
+            - '-cp'
+            - '/app/resources:/app/classes:/app/libs/*'
+            - dev.jianmu.api.SpringbootApp
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          env:
+            - name: EMBEDDED_DOCKER-WORKER_DOCKER-HOST
+              value: 'unix:///var/run/docker.sock'
+            - name: EMBEDDED_DOCKER-WORKER_SOCK-FILE
+              value: /var/run/docker.sock
+            - name: JIANMU_API_ADMINPASSWD
+              value: '123456'
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: '123456'
+            - name: SPRING_DATASOURCE_URL
+              value: >-
+                jdbc:mysql://jianmu-mysql:3306/jianmu?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+          resources: {}
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+            - name: ci-server-claim1
+              mountPath: /task_log
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: jianmu-mysql
+  namespace: default
+  labels:
+    io.kompose.service: jianmu-mysql
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.7.0 (HEAD)
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jianmu-mysql
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jianmu-mysql
+    spec:
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-claim
+      containers:
+        - name: jianmu-mysql
+          image: 'mysql:8'
+          args:
+            - '--init-connect=SET NAMES utf8'
+            - '--character-set-server=utf8mb4'
+            - '--collation-server=utf8mb4_unicode_ci'
+            - '--max-connections=1200'
+            - '--max-user-connections=1000'
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_DATABASE
+              value: jianmu
+            - name: MYSQL_ROOT_PASSWORD
+              value: '123456'
+            - name: TZ
+              value: Asia/Shanghai
+          resources: {}
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: web
+  namespace: default
+  labels:
+    io.kompose.service: web
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.7.0 (HEAD)
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: web
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: ''
+      containers:
+        - name: web
+          image: 'jianmudev/jianmu-ci-ui:v1.0.0'
+          ports:
+            - containerPort: 80
+              protocol: TCP
+            - containerPort: 443
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ci-server
+  namespace: default
+  labels:
+    io.kompose.service: ci-server
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.7.0 (HEAD)
+spec:
+  ports:
+    - name: '8081'
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+  selector:
+    io.kompose.service: ci-server
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: jianmu-mysql
+  namespace: default
+  labels:
+    io.kompose.service: jianmu-mysql
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.7.0 (HEAD)
+spec:
+  ports:
+    - name: '3306'
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+  selector:
+    io.kompose.service: jianmu-mysql
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: web
+  namespace: default
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30180
+  selector:
+    io.kompose.service: web
+  type: NodePort
+  sessionAffinity: ClientIP
+  externalTrafficPolicy: Cluster
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kube-root-ca.crt
+  namespace: default
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIC5zCCAc+gAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
+    cm5ldGVzMB4XDTIxMTAwMTE3MjMwNFoXDTMxMDkyOTE3MjMwNFowFTETMBEGA1UE
+    AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKIv
+    qRXAHgll8FH0zwgGu28jpLy7+IiAgBl+yTAerTpgEkYOufx7JXoefRJswMKjKEIf
+    WHIgrVECAiG89Pk3/ISN+UW+PsSXQDzYXLit1GYq3gTpSgg8ZEDy+NhOFC57ZX/x
+    GZGkqIMCbhnevVsLx1wr+JxedO74NqetWppKw8AfN49krYlb2uNnpbXbUJ/aM3S2
+    uscl6ImfsF361OwQCYAKZIVXq47i+FrZQvD/fZZnMBlNZ4u4G0udUdHgvcC7l2Cq
+    PyHtSd5nV4JLIOg8T+15YvSWknfGM6tl4YL3IGb4brhVTYZlb5n7KY5MkWfV5tJO
+    RTo4vzf/WZC+lyd93hUCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
+    /wQFMAMBAf8wHQYDVR0OBBYEFMswcrgu/VVjYG6fiDOqJbuBEZPqMA0GCSqGSIb3
+    DQEBCwUAA4IBAQCdoXWveH/s8YJpNovqdci+yfth5GWmsEaKtCH2fX5NBPELlyUW
+    YcHqZmRTHS2I3/F+v9roiguUuJ+G4bvNFd+2hnQcUaKTY62q8OrsXv9RuJ+5M76s
+    W9jg4F0OSeqT9ILiyzzLsftSY6f8tZ+pM4JoWzEKWBj8bH8pwWJsHja/2ldeY/m+
+    usp7YpEp3cEW8JmCyBbjdJtefThdkTsmWH0IgaIQZamxQ9ybNxKCvNc7a8L4Vw/R
+    tYFEJDeL5GzHt9ukPNx/o/FgSHSevyXSUZMutO5fB7UE6hFrGkLh/b93IPGlNlij
+    SUGb3kUysyzGBTjh2K6D7tjkttPjVrntoGlL
+    -----END CERTIFICATE-----
+
