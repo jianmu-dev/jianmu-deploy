@@ -14,7 +14,7 @@ jianmu服务部署
 
 #### 使用说明
 
-1.  wget https://gitee.com/jianmu_dev/jianmu-deploy/raw/master/docker-compose.yml
+1.  wget https://gitee.com/jianmu-dev/jianmu-deploy/raw/master/docker-compose.yml
 2.  docker-compose up -d启动
 
 #### 访问平台
@@ -28,7 +28,7 @@ jianmu服务部署
 
 #### 使用说明
 
-1.  wget https://gitee.com/jianmu_dev/jianmu-deploy/raw/master/kubernetes-yaml
+1.  wget https://gitee.com/jianmu-dev/jianmu-deploy/raw/master/kubernetes-yaml
 2.  kubectl apply -f kubernetes-yaml启动
 
 #### 访问平台
