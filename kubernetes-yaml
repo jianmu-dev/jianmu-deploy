@@ -31,10 +31,12 @@ spec:
             claimName: ci-server-claim1
       containers:
         - name: ci-server
-          image: 'jianmudev/jianmu-ci-server:v1.0.0'
+          image: 'jianmudev/jianmu-ci-server:v1.1.0'
           command:
             - /wait-for-it.sh
             - 'jianmu-mysql:3306'
+            - '-t'
+            - '0'
             - '--'
             - java
             - '-Duser.timezone=Asia/Shanghai'
@@ -173,7 +175,7 @@ spec:
             type: ''
       containers:
         - name: web
-          image: 'jianmudev/jianmu-ci-ui:v1.0.0'
+          image: 'jianmudev/jianmu-ci-ui:v1.1.0'
           ports:
             - containerPort: 80
               protocol: TCP
