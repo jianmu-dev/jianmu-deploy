@@ -6,7 +6,7 @@
 
 **注意：** 这里如果写错有可能导致Chrome等浏览器无法打开Vault的UI界面
 
-然后使用openssl生成证书和Key
+然后在`volumes/cert/`目录下，使用openssl生成证书和Key
 
 ```
 openssl req -nodes -x509 -days 365 -keyout vault.key -out vault.crt -config cert.conf
