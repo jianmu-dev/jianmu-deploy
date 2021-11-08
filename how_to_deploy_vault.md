@@ -74,13 +74,13 @@ vault login <Initial_Root_Token>
 # 开启cert认证模式
 vault auth enable cert
 # 写入证书
-vault write auth/cert/certs/jianmu policies=jianmu certificate=@volumes/cert/vault.crt ttl=1h
+vault write auth/cert/certs/jianmu policies=jianmu certificate=@/vault/cert/vault.crt ttl=1h
 # 写入policy
-vault policy write jianmu ./jianmu-policy.hcl
+vault policy write jianmu /vault/config/jianmu-policy.hcl
 ```
 验证一下是否成功开启
 ```
-vault login -method=cert -client-cert=volumes/cert/vault.crt -client-key=volumes/cert/vault.key name=jianmu
+vault login -method=cert -client-cert=/vault/cert/vault.crt -client-key=/vault/cert/vault.key name=jianmu
 # 写入数据
 vault kv put jianmu/test bar=baz
 # 读取数据
