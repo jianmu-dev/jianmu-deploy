@@ -74,6 +74,8 @@ vault login <Initial_Root_Token>
 ```
 # 开启cert认证模式
 vault auth enable cert
+# 开启名为jianmu的v1版本的密钥引擎
+vault secrets enable -path="jianmu" -version=1 kv
 # 写入证书
 vault write auth/cert/certs/jianmu policies=jianmu certificate=@/vault/cert/vault.crt ttl=1h
 # 写入policy
