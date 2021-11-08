@@ -1,6 +1,14 @@
 # 如何部署Vault
 
-### 生成自签名证书
+### 使用Docker Compose安装Vault
+
+```
+git clone https://gitee.com/jianmu-dev/jianmu-deploy.git
+cd jianmu-deploy
+docker-compose -f docker-compose-vault.yml up -d
+```
+
+#### 生成自签名证书
 
 首先修改`volumes/cert/cert.conf`中的`CN`和`IP.1`为本机IP
 
@@ -10,14 +18,6 @@
 
 ```
 openssl req -nodes -x509 -days 365 -keyout vault.key -out vault.crt -config cert.conf
-```
-
-### 使用Docker Compose安装Vault
-
-```
-git clone https://gitee.com/jianmu-dev/jianmu-deploy.git
-cd jianmu-deploy
-docker-compose -f docker-compose-vault.yml up -d
 ```
 
 #### 进入容器
