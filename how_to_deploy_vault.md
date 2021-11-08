@@ -5,12 +5,13 @@
 ```
 git clone https://gitee.com/jianmu-dev/jianmu-deploy.git
 cd jianmu-deploy
+
+# 修改`volumes/cert/cert.conf`中的`CN`和`IP.1`为本机IP
+
 docker-compose -f docker-compose-vault.yml up -d
 ```
 
 #### 生成自签名证书
-
-首先修改`volumes/cert/cert.conf`中的`CN`和`IP.1`为本机IP
 
 **注意：** 这里如果写错有可能导致Chrome等浏览器无法打开Vault的UI界面
 
