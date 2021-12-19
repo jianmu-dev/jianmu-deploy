@@ -35,3 +35,10 @@ services:
     depends_on:
       - jianmu-mysql
       - ci-server
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.1.0.0/16
+
