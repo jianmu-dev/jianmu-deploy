@@ -1,4 +1,4 @@
-name: 批量导入建木官方示例项目
+name: 批量导入建木示例
 
 pipeline:
   git_clone:
