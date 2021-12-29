@@ -1,0 +1,49 @@
+name: hello jianmu
+
+workflow:
+  start:
+    type: start
+    targets:
+      - hell_jianmu_shell
+      - hell_jianmu_java
+      - hell_jianmu_python
+      - hell_jianmu_javascript
+  hell_jianmu_shell:
+    type: custom_node_example:1.0.0-shell
+    sources:
+      - start
+    targets:
+      - end
+    param:
+      name: ianmu in shell example node
+  hell_jianmu_java:
+    type: custom_node_example:1.0.0-java
+    sources:
+      - start
+    targets:
+      - end
+    param:
+      name: ianmu in java example node
+  hell_jianmu_python:
+    type: custom_node_example:1.0.0-python
+    sources:
+      - start
+    targets:
+      - end
+    param:
+      name: ianmu in python example node
+  hell_jianmu_javascript:
+    type: custom_node_example:1.0.0-javascript
+    sources:
+      - start
+    targets:
+      - end
+    param:
+      name: ianmu in shell javascript node
+  end:
+    type: end
+    sources:
+      - hell_jianmu_shell
+      - hell_jianmu_java
+      - hell_jianmu_python
+      - hell_jianmu_javascript

@@ -1,0 +1,9 @@
+groups:
+  - name: 默认分组
+    projects:
+      # 批量导入
+      - /examples/batch_import.yml
+  - name: 建木官方示例
+    projects:
+      # hello_jianmu
+      - /examples/dsl/hello_jianmu.yml

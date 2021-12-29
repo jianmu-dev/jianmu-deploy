@@ -1,0 +1,18 @@
+name: 批量导入建木官方示例项目
+
+pipeline:
+  git_clone:
+    type: git_clone:1.2.0
+    param:
+      remote_url: https://gitee.com/jianmu-dev/jianmu-deploy.git
+      ref: refs/heads/master
+  sync_project_group:
+    type: sync_project_group:2.1.0
+    param:
+      ci_url: https://ci.jianmu.run
+      ci_username: ((jianmu_ci.username))
+      ci_password: ((jianmu_ci.password))
+      git_path: ${git_clone.git_path}
+      group_file_path: /examples/project_group.yml
+      deletable: false
+      sortable: true
