@@ -3,6 +3,7 @@ name: hello jianmu
 workflow:
   start:
     type: start
+    alias: 开始
     targets:
       - hell_jianmu_shell
       - hell_jianmu_java
@@ -10,38 +11,43 @@ workflow:
       - hell_jianmu_javascript
   hell_jianmu_shell:
     type: custom_node_example:1.0.0-shell
+    alias: shell示例
     sources:
       - start
     targets:
       - end
     param:
-      name: ianmu in shell example node
+      name: jianmu in shell example node
   hell_jianmu_java:
     type: custom_node_example:1.0.0-java
+    alias: java示例
     sources:
       - start
     targets:
       - end
     param:
-      name: ianmu in java example node
+      name: jianmu in java example node
   hell_jianmu_python:
     type: custom_node_example:1.0.0-python
+    alias: python示例
     sources:
       - start
     targets:
       - end
     param:
-      name: ianmu in python example node
+      name: jianmu in python example node
   hell_jianmu_javascript:
     type: custom_node_example:1.0.0-javascript
+    alias: js示例
     sources:
       - start
     targets:
       - end
     param:
-      name: ianmu in shell javascript node
+      name: jianmu in javascript example node
   end:
     type: end
+    alias: 结束
     sources:
       - hell_jianmu_shell
       - hell_jianmu_java
