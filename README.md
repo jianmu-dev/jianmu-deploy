@@ -28,8 +28,8 @@ jianmu服务部署
 
 #### 使用说明
 
-1.  wget https://gitee.com/jianmu-dev/jianmu-deploy/raw/master/kubernetes-yaml
-2.  kubectl apply -f kubernetes-yaml启动
+1.  wget https://gitee.com/jianmu-dev/jianmu-deploy/raw/master/kubernetes.yaml
+2.  kubectl apply -f kubernetes.yaml启动
 
 #### 访问平台
 地址: node节点ip:30180
