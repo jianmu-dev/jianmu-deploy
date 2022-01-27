@@ -11,7 +11,7 @@ services:
       MYSQL_DATABASE: "jianmu"
       TZ: "Asia/Shanghai"
   ci-server:
-    image: jianmudev/jianmu-ci-server:v2.2.0
+    image: jianmudev/jianmu-ci-server:v2.2.1
     restart: always
     environment:
       SPRING_PROFILES_ACTIVE: dev
@@ -29,7 +29,7 @@ services:
       - jianmu-mysql
     entrypoint: ["/wait-for-it.sh", "jianmu-mysql:3306", "-t", "0", "--", "java", "-Duser.timezone=Asia/Shanghai", "-cp", "/app/resources:/app/classes:/app/libs/*", "dev.jianmu.api.SpringbootApp"]
   web:
-    image: jianmudev/jianmu-ci-ui:v2.2.0
+    image: jianmudev/jianmu-ci-ui:v2.2.1
     ports:
       - "80:80"
       - "443:443"
