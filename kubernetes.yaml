@@ -67,7 +67,7 @@ spec:
             - name: docker-sock
               mountPath: /var/run/docker.sock
             - name: ci-server-claim1
-              mountPath: /task_log
+              mountPath: /ci
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent

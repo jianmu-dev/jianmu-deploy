@@ -25,8 +25,7 @@ services:
 #      REGISTRY_SK:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /mnt/jianmu/ci/task_log:/task_log
-      - /mnt/jianmu/ci/workflow_log:/workflow_log
+      - /mnt/jianmu/ci:/ci
     depends_on:
       - jianmu-mysql
     entrypoint: ["/wait-for-it.sh", "jianmu-mysql:3306", "-t", "0", "--", "java", "-Duser.timezone=Asia/Shanghai", "-cp", "/app/resources:/app/classes:/app/libs/*", "dev.jianmu.api.SpringbootApp"]
